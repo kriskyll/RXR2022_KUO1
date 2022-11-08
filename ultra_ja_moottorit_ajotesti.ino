@@ -1,5 +1,5 @@
 /*
-	Testaus ultraääniantureille
+	Testi moottorien ohjaamiselle etäisyysanturien signaalin mukaan.
 	Käytössä olevat pinnit:
 	- Vasen anturi
 		Trig 2
@@ -10,6 +10,8 @@
 	- Oikea anturi
 		Trig 10
 		Echo 13
+	
+	Moottorit käyttää pinnejä shieldin mukaan (pinnit 3-8).
 */
 
 // Ultrasonic-anturit
