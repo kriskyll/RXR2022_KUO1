@@ -12,11 +12,11 @@
 		Echo 13
 */
 
-#define trigV 5
+#define trigV 2
 #define echoV 11
-#define trigK 6
+#define trigK 9
 #define echoK 12
-#define trigO 7
+#define trigO 10
 #define echoO 13
 
 long duration;
