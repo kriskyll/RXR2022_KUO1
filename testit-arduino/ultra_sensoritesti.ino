@@ -2,13 +2,13 @@
 	Testaus ultraääniantureille
 	Käytössä olevat pinnit:
 	- Vasen anturi
-		Trig 5
+		Trig 2
 		Echo 11
 	- Keski anturi
-		Trig 6
+		Trig 9
 		Echo 12
 	- Oikea anturi
-		Trig 7
+		Trig 10
 		Echo 13
 */
 
