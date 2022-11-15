@@ -2,7 +2,7 @@ import time
 
 import azure.cognitiveservices.speech as speechsdk
 
-from secrets import azure_token
+from secret import azure_token
 
 # Config
 subscription = azure_token
@@ -157,11 +157,11 @@ def speech_recognize_keyword_from_microphone_test():
 
 # Examples
 """ 15 Sec voice detection """
-# recognize_from_microphone("fi-FI")  # in finnish
+recognize_from_microphone("fi-FI")  # in finnish
 # recognize_from_microphone("en-US")  # in english
 """ Continuous voice recognition triggered by 'Hey Raspi' """
 # speech_recognize_keyword_from_microphone()
 
-while mode != "shutdown":
-    speech_recognize_keyword_from_microphone_test()
+#while mode != "shutdown":
+#    speech_recognize_keyword_from_microphone_test()
 
