@@ -1,1 +1,2 @@
 azure-cognitiveservices-speech~=1.24.1
+playsound

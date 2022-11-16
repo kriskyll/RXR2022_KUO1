@@ -1,4 +1,5 @@
 import time
+import vlc
 
 import azure.cognitiveservices.speech as speechsdk
 
@@ -39,7 +40,7 @@ def speech_recognize_keyword_from_microphone():
 
     # Creates an instance of a keyword recognition model. Update this to
     # point to the location of your keyword recognition model.
-    model = speechsdk.KeywordRecognitionModel("8438ba84-7d4a-43c8-b81b-71cd059bf3c3.table")
+    model = speechsdk.KeywordRecognitionModel("hey-raspi-keyword-model.table")
 
     # The phrase your keyword recognition model triggers on.
     keyword = "Hey Raspi"
@@ -92,10 +93,10 @@ def speech_recognize_keyword_from_microphone():
 def speech_recognize_keyword_from_microphone_test():
     """performs keyword-triggered speech recognition with input microphone"""
     speech_config = speechsdk.SpeechConfig(subscription=subscription, region=region)
-    speech_config.speech_recognition_language = "fi-FI"
+    speech_config.speech_recognition_language = "en-US"
 
     # This model is trained in "Azure speech studio" and contains keyword "Hey Raspi"
-    model = speechsdk.KeywordRecognitionModel("8438ba84-7d4a-43c8-b81b-71cd059bf3c3.table")
+    model = speechsdk.KeywordRecognitionModel("hey-raspi-keyword-model.table")
 
     # The phrase your keyword recognition model triggers on.
     keyword = "Hey Raspi"
@@ -163,5 +164,6 @@ def speech_recognize_keyword_from_microphone_test():
 # speech_recognize_keyword_from_microphone()
 
 while mode != "shutdown":
+    # recognize_from_microphone("fi-FI")
     speech_recognize_keyword_from_microphone_test()
 
