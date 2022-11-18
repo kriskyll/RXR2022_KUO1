@@ -42,7 +42,7 @@ if __name__ == "__main__":
             break
 
         if len(boxes) == 0:
-            ser.write(bytearray("x".encode()))
+            ser.write(bytearray("x 0".encode()))
 
         if len(boxes) > 0:
             print("1")
@@ -54,14 +54,16 @@ if __name__ == "__main__":
             print(x1, x2)
             direction = (x1+x2)/2
 
+            # 
+            
             if 175 < direction < 225:
-                ser.write(bytearray("w".encode()))
+                ser.write(bytearray("w 200".encode()))
 
             elif direction > 205:
-                ser.write(bytearray("e".encode()))
+                ser.write(bytearray(f"e {direction}".encode()))
 
             elif direction < 195:
-                ser.write(bytearray("q".encode()))
+                ser.write(bytearray(f"q {direction}".encode()))
         
         
         #if cv2.waitKey(1) & 0xFF == ord('q'):

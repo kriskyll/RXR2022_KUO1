@@ -1,6 +1,4 @@
 /*
-Testaus moottoreiden ohjaamiseen sarjaportin yli.
-
 Ei käytä ultraääniantureita mihinkään.
 */
 
@@ -12,10 +10,9 @@ Ei käytä ultraääniantureita mihinkään.
 #define dir_b0 8
 #define dir_b1 7
 
-char inbit; // A place to store serial input
-
-int speed = 150;
-int turning_speed = 75;
+String s_input; // A place to store serial input
+char action;
+int coeff;
 
 void setup()
 {
@@ -38,38 +35,55 @@ void loop()
 
 if(Serial.available()){ // Wait for serial input
 
-  inbit = Serial.read();
+  s_input = Serial.readString();
+
+  Serial.println(s_input);
+  
+  action = s_input.substring(0, 1)[0];
+  Serial.println(action);
+
+  String x = s_input.substring(2, s_input.length());
+  int l = x.length();
+  char y[l];
+  x.toCharArray(y, l);
+  
+  coeff = atoi(y);
+
+  Serial.println(coeff);
+
+  
+  
  
-  switch(inbit){ // Switch based on serial in
+  switch(action){ // Switch based on serial in
 
     case 'w': // Move Forward
 
-      forward(speed);
+      forward(coeff);
       break;
 
     case 's': // Move Backward
 
-      reverse(speed);
+      reverse(coeff);
       break;
 
     case 'q': // Turn Left while moving forward
 
-      turnL(turning_speed);
+      turnL(coeff);
       break;
         
     case 'e': // Turn Right while moving forward
 
-      turnR(turning_speed);
+      turnR(coeff);
       break;
 
     case 'a': // Spin Left in place
 
-      spinL(speed);
+      spinL(coeff);
       break;
   
     case 'd': // Spin Right in place
 
-      spinR(speed);
+      spinR(coeff);
       break;
 
     case 'x': // Short brake
