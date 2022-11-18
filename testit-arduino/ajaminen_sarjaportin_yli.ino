@@ -43,43 +43,31 @@ if(Serial.available()){ // Wait for serial input
     case 'w': // Move Forward
 
       forward(200);
-      delay(30);
-      shutoff();
       break;
 
     case 's': // Move Backward
 
       reverse(200);
-      delay(30);
-      shutoff();
       break;
 
     case 'q': // Turn Left while moving forward
 
       turnL(200);
-      delay(30);
-      shutoff();
       break;
         
     case 'e': // Turn Right while moving forward
 
       turnR(200);
-      delay(30);
-      shutoff();
       break;
 
     case 'a': // Spin Left in place
 
       spinL(200);
-      delay(30);
-      shutoff();
       break;
   
     case 'd': // Spin Right in place
 
       spinR(200);
-      delay(30);
-      shutoff();
       break;
 
     case 'x': // Short brake
