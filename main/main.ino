@@ -12,7 +12,9 @@ Ei käytä ultraääniantureita mihinkään.
 
 String s_input; // A place to store serial input
 char action;
-int coeff;
+int adjusted_speed;
+
+int default_speed;
 
 void setup()
 {
@@ -27,6 +29,8 @@ void setup()
   pinMode(dir_b1, OUTPUT);
 
   draw(); // Draw the driving instructions to the serial terminal
+
+  default_speed = 200;
   
 }
 
@@ -47,9 +51,9 @@ if(Serial.available()){ // Wait for serial input
   char y[l];
   x.toCharArray(y, l);
   
-  coeff = atoi(y);
+  adjusted_speed = atoi(y);
 
-  Serial.println(coeff);
+  Serial.println(adjusted_speed);
 
   
   
@@ -58,32 +62,32 @@ if(Serial.available()){ // Wait for serial input
 
     case 'w': // Move Forward
 
-      forward(coeff);
+      forward(adjusted_speed);
       break;
 
     case 's': // Move Backward
 
-      reverse(coeff);
+      reverse(adjusted_speed);
       break;
 
     case 'q': // Turn Left while moving forward
 
-      turnL(coeff);
+      turnL(adjusted_speed);
       break;
         
     case 'e': // Turn Right while moving forward
 
-      turnR(coeff);
+      turnR(adjusted_speed);
       break;
 
     case 'a': // Spin Left in place
 
-      spinL(coeff);
+      spinL(adjusted_speed);
       break;
   
     case 'd': // Spin Right in place
 
-      spinR(coeff);
+      spinR(adjusted_speed);
       break;
 
     case 'x': // Short brake
@@ -129,8 +133,8 @@ digitalWrite(dir_a1, 1);
 digitalWrite(dir_b0, 0);
 digitalWrite(dir_b1, 1);
 
-analogWrite(pwm_a, speed); 
-analogWrite(pwm_b, speed/4); 
+analogWrite(pwm_a, default_speed); 
+analogWrite(pwm_b, speed); 
 
 }
 
@@ -142,8 +146,8 @@ digitalWrite(dir_a1, 1);
 digitalWrite(dir_b0, 0);
 digitalWrite(dir_b1, 1);
 
-analogWrite(pwm_a, speed/4); 
-analogWrite(pwm_b, speed); 
+analogWrite(pwm_a, speed); 
+analogWrite(pwm_b, default_speed); 
 
 }
 

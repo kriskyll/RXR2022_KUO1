@@ -14,13 +14,24 @@ if __name__ == "__main__":
          
     # open webcam video stream
     cap = cv2.VideoCapture(0)   
+
+    # frame size
+    frame_w = 400
+    frame_h = 200
+
+    # motor speed
+    speed = 200
     
     while(True):
+        
+        # counts frames with no box detected, softens the stopping threshold
+        no_box_count = 0
+        
         # Capture frame-by-frame
         ret, frame = cap.read()
     
         # resizing for faster detection
-        frame = cv2.resize(frame, (400, 200))
+        frame = cv2.resize(frame, (frame_w, frame_h))
         # using a greyscale picture, also for faster detection
         gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
      
@@ -41,29 +52,44 @@ if __name__ == "__main__":
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
+        # Stopping robot if no human detected
         if len(boxes) == 0:
+            #no_box_count += 1
+            #if no_box_count > 5:
             ser.write(bytearray("x 0".encode()))
+            #    no_box_count = 0
 
         if len(boxes) > 0:
-            print("1")
 
             #box[x1, y1, x2, y2]
             box = boxes[0]
             x1 = box[0]
             x2 = box[2]
-            print(x1, x2)
             direction = (x1+x2)/2
 
-            # 
+            print("direction: ", direction)
+
+            # coefficient for dynamic motor control
+            deviation = direction - frame_w/2
+            if deviation < 0:
+                deviation *= -1
+
+            adjusted_speed = int(speed - deviation)
+            print("adjusted speed is:", adjusted_speed)
+
+            # MOVEMENT CONTROL
             
             if 175 < direction < 225:
-                ser.write(bytearray("w 200".encode()))
+                print("straight: ", speed)
+                ser.write(bytearray(f"w {speed}".encode()))
 
             elif direction > 205:
-                ser.write(bytearray(f"e {direction}".encode()))
+                print("right: ", adjusted_speed)
+                ser.write(bytearray(f"e {adjusted_speed}".encode()))
 
             elif direction < 195:
-                ser.write(bytearray(f"q {direction}".encode()))
+                print("left: ", adjusted_speed)
+                ser.write(bytearray(f"q {adjusted_speed}".encode()))
         
         
         #if cv2.waitKey(1) & 0xFF == ord('q'):
