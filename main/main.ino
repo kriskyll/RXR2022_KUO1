@@ -36,27 +36,19 @@ void setup()
 
 void loop()
 { 
-
 if(Serial.available()){ // Wait for serial input
 
   s_input = Serial.readString();
-
-  Serial.println(s_input);
-  
   action = s_input.substring(0, 1)[0];
-  Serial.println(action);
-
-  String x = s_input.substring(2, s_input.length());
+  
+  String x = s_input.substring(2, s_input.length()+1);
   int l = x.length();
   char y[l];
-  x.toCharArray(y, l);
+  x.toCharArray(y, l+1);
   
   adjusted_speed = atoi(y);
-
+  
   Serial.println(adjusted_speed);
-
-  
-  
  
   switch(action){ // Switch based on serial in
 

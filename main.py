@@ -3,6 +3,7 @@
 import serial_conn as ser
 import numpy as np
 import cv2
+from time import sleep
 
 if __name__ == "__main__":
 
@@ -21,11 +22,18 @@ if __name__ == "__main__":
 
     # motor speed
     speed = 200
+    no_box_count = 0
+    ready = True
+    next_command = bytearray()
     
     while(True):
-        
+
+        if ser.ser.in_waiting > 0:
+            ready = True
+            line = ser.ser.readline().decode('utf-8').rstrip()
+            print(line)
+                
         # counts frames with no box detected, softens the stopping threshold
-        no_box_count = 0
         
         # Capture frame-by-frame
         ret, frame = cap.read()
@@ -54,20 +62,21 @@ if __name__ == "__main__":
 
         # Stopping robot if no human detected
         if len(boxes) == 0:
-            #no_box_count += 1
-            #if no_box_count > 5:
-            ser.write(bytearray("x 0".encode()))
-            #    no_box_count = 0
+            no_box_count += 1
+            if no_box_count > 5:
+                next_command = bytearray("x 0".encode())
+                no_box_count = 0
 
         if len(boxes) > 0:
-
+            no_box_count = 0
+            
             #box[x1, y1, x2, y2]
             box = boxes[0]
             x1 = box[0]
             x2 = box[2]
             direction = (x1+x2)/2
 
-            print("direction: ", direction)
+            #print("direction: ", direction)
 
             # coefficient for dynamic motor control
             deviation = direction - frame_w/2
@@ -75,26 +84,24 @@ if __name__ == "__main__":
                 deviation *= -1
 
             adjusted_speed = int(speed - deviation)
-            print("adjusted speed is:", adjusted_speed)
-
+            #print("adjusted speed is:", adjusted_speed)
+            #print("speed is : ", speed)
             # MOVEMENT CONTROL
             
             if 175 < direction < 225:
-                print("straight: ", speed)
-                ser.write(bytearray(f"w {speed}".encode()))
+                next_command = bytearray(f"w {speed}".encode())
 
             elif direction > 205:
-                print("right: ", adjusted_speed)
-                ser.write(bytearray(f"e {adjusted_speed}".encode()))
+            
+                next_command = bytearray(f"e {adjusted_speed}".encode())
 
             elif direction < 195:
-                print("left: ", adjusted_speed)
-                ser.write(bytearray(f"q {adjusted_speed}".encode()))
+                next_command = bytearray(f"q {adjusted_speed}".encode())
+
+        if ready:
+            ready = False
+            ser.write(next_command)
         
-        
-        #if cv2.waitKey(1) & 0xFF == ord('q'):
-        #    break
-    
     # When everything done, release the capture
     cap.release()
      
