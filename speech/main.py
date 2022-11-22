@@ -1,25 +1,22 @@
 import time
-from playsound import playsound  # TODO: Vaihda parempaan kirjastoon
-
-
-#     Error 263 for command:
-#         open bark.mp3
-#     The specified device is not open or is not recognized by MCI.
-#
-#     Error 263 for command:
-#         close bark.mp3
-#     The specified device is not open or is not recognized by MCI.
-# Failed to close the file: bark.mp3
+import pygame
+from os import path
 
 import azure.cognitiveservices.speech as speechsdk
 
 from secrets import azure_token
 
+# init bark audio
+pygame.init()
+pygame.mixer.init()
+workingdir = path.dirname(path.abspath(__file__))
+sound = pygame.mixer.Sound(path.join(workingdir, 'bark.wav'))
 
-# Config
+# Azure config
 subscription = azure_token
 region = 'swedencentral'
 
+# Selected mode
 mode = ""
 
 
@@ -27,18 +24,6 @@ def speech_recognize_keyword_from_microphone():
     """performs keyword-triggered speech recognition with input microphone"""
     speech_config = speechsdk.SpeechConfig(subscription=subscription, region=region)
     speech_config.speech_recognition_language = "fi-FI"
-    # speech_config.set_property(
-    #     property_id=speechsdk.PropertyId.SpeechServiceConnection_InitialSilenceTimeoutMs, value="10000"
-    # )
-    # speech_config.set_property(
-    #     property_id=speechsdk.PropertyId.SpeechServiceConnection_EndSilenceTimeoutMs, value="10000"
-    # )
-    # # speech_config.set_property(
-    # #     property_id=speechsdk.PropertyId.Speech_SegmentationSilenceTimeoutMs, value="10000"
-    # # )
-    # speech_config.set_property(
-    #     property_id=speechsdk.PropertyId.Conversation_Initial_Silence_Timeout, value="10000"
-    # )
 
     # This model is trained in "Azure speech studio" and contains keyword "Hey Raspi"
     model = speechsdk.KeywordRecognitionModel("hey-raspi-keyword-model.table")
@@ -96,7 +81,7 @@ def speech_recognize_keyword_from_microphone():
         print(f"Selected mode: {mode}")
 
     def bark():
-        playsound("bark.mp3")
+        sound.play()
 
     # Connect callbacks to the events fired by the speech recognizer
     speech_recognizer.recognizing.connect(recognizing_cb)
@@ -118,8 +103,5 @@ def speech_recognize_keyword_from_microphone():
 
 
 """ Continuous voice recognition triggered by 'Hey Raspi' """
-# speech_recognize_keyword_from_microphone()
 while mode != "shutdown":
     speech_recognize_keyword_from_microphone()
-
-
