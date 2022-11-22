@@ -25,13 +25,13 @@
 // Moottoreiden ohjaus
 #define pwm_a 3
 #define pwm_b 6
-#define dir_a0 4
-#define dir_a1 5
-#define dir_b0 7
-#define dir_b1 8
+#define dir_a0 5
+#define dir_a1 4
+#define dir_b0 8
+#define dir_b1 7
 
 long duration;
-int distance, max, velocity;
+int distance, max, min, velocity;
 
 void setup() {
 	// Testailuun seriali
@@ -52,18 +52,17 @@ void setup() {
 	pinMode(dir_b1, OUTPUT);
 
 	// Raja-arvot ajeluun
-	max = 20;
-	velocity = 50;
+	// Maksimietäisyys mihin asti ultraääni mittaa
+	max = 30;
+	// Minimietäisyys mistä asti ultraääni mittaa - turvaetäisyys ettei osu
+	min = 10;
+	// Moottorien maksiminopeus
+	velocity = 100;
 }
 
 // Main functionality
 void loop() {
-	if (measureV() > max and measureK() > max and measureO() > max) {
-		forward(velocity);
-	}
-	else {
-		reverse(velocity);
-	}
+	drive(measureV(), measureK(), measureO());
 }
 
 int measureV() {
@@ -102,7 +101,10 @@ int measure(int trig, int echo) { // Etäisyyden mittaaminen
 	*/
 
 	if (distance > max) {
-		distance = max;
+		distance = max-min;
+	}
+	if (distance < min) {
+		distance = 0;
 	}
 	
 	return distance;
@@ -161,6 +163,15 @@ void turnR(int speed) // Turn Right while moving forward
 }
 
 void drive(int leftSensorValue, int centralSensorValue, int rightSensorValue) { // Drive forward & turn based on ultrasound distance signal. For avoiding objects.
+	if (centralSensorValue == 0) {
+		reverse(velocity);
+		delay(1000);
+		shutoff();
+		spinR(velocity);
+		delay(1000);
+		shutoff();
+	}
+	
 	digitalWrite(dir_a0, 0);
 	digitalWrite(dir_a1, 1);
 	digitalWrite(dir_b0, 0);
@@ -170,8 +181,8 @@ void drive(int leftSensorValue, int centralSensorValue, int rightSensorValue) { 
 	// Pitäisi lisätä se moodi, että kääntää mieluummin vähän enempi oikialle jos keskisensori aktivoituu.
 	// Onkohan tässä jotain ongelmia noiden ultraääniantureiden muodostamien keilojen kanssa? :hmm
 
-	analogWrite(pwm_a, velocity*(leftSensorValue/max));
-	analogWrite(pwm_b, velocity*(rightSensorValue/max));
+	analogWrite(pwm_a, velocity*(leftSensorValue/(max-min)));
+	analogWrite(pwm_b, velocity*(rightSensorValue/(max-min)));
 
 
 }
@@ -184,8 +195,8 @@ digitalWrite(dir_a1, 1);
 digitalWrite(dir_b0, 1);
 digitalWrite(dir_b1, 0);
 
-analogWrite(pwm_a, speed/2); 
-analogWrite(pwm_b, speed/2); 
+analogWrite(pwm_a, speed); 
+analogWrite(pwm_b, speed); 
 
 }
 
@@ -197,7 +208,33 @@ digitalWrite(dir_a1, 0);
 digitalWrite(dir_b0, 0);
 digitalWrite(dir_b1, 1);
 
-analogWrite(pwm_a, speed/2); 
-analogWrite(pwm_b, speed/2); 
+analogWrite(pwm_a, speed); 
+analogWrite(pwm_b, speed); 
+
+}
+
+void brake() // Short brake
+{ 
+
+digitalWrite(dir_a0, 1);
+digitalWrite(dir_a1, 1);
+digitalWrite(dir_b0, 1);
+digitalWrite(dir_b1, 1);
+
+analogWrite(pwm_a, 0); 
+analogWrite(pwm_b, 0);
+
+}
+
+void shutoff() // Stop Motors w/o braking
+{ 
+
+digitalWrite(dir_a0, 0);
+digitalWrite(dir_a1, 0);
+digitalWrite(dir_b0, 0);
+digitalWrite(dir_b1, 0);
+
+analogWrite(pwm_a, 0); 
+analogWrite(pwm_b, 0);
 
 }
