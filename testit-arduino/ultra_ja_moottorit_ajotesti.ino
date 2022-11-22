@@ -35,7 +35,7 @@ int distance, max, velocity;
 
 void setup() {
 	// Testailuun seriali
-	Serial.begin(9600);
+	//Serial.begin(9600);
 	// Ultrasonicit
 	pinMode(trigV, OUTPUT);
 	pinMode(echoV, INPUT);
@@ -50,11 +50,13 @@ void setup() {
 	pinMode(dir_a1, OUTPUT);
 	pinMode(dir_b0, OUTPUT);
 	pinMode(dir_b1, OUTPUT);
+
 	// Raja-arvot ajeluun
 	max = 20;
 	velocity = 50;
 }
 
+// Main functionality
 void loop() {
 	if (measureV() > max and measureK() > max and measureO() > max) {
 		forward(velocity);
@@ -85,7 +87,7 @@ int measure(int trig, int echo) { // Etäisyyden mittaaminen
 	duration = pulseIn(echo, HIGH);
 	distance = duration * 0.034 / 2;
 	
-	// Testausta varten alla olevat
+	/* Testausta varten alla olevat
 	if (trig == 5) {
 		Serial.print("Vasen: ");
 	}
@@ -97,6 +99,11 @@ int measure(int trig, int echo) { // Etäisyyden mittaaminen
 	}
 	Serial.print(distance);
 	Serial.println(" cm");
+	*/
+
+	if (distance > max) {
+		distance = max;
+	}
 	
 	return distance;
 }
@@ -153,9 +160,44 @@ void turnR(int speed) // Turn Right while moving forward
 
 }
 
-void turnX() {
+void drive(int leftSensorValue, int centralSensorValue, int rightSensorValue) { // Drive forward & turn based on ultrasound distance signal. For avoiding objects.
 	digitalWrite(dir_a0, 0);
 	digitalWrite(dir_a1, 1);
 	digitalWrite(dir_b0, 0);
 	digitalWrite(dir_b1, 1);
+
+	// Tämän kirjoittelu on kesken
+	// Pitäisi lisätä se moodi, että kääntää mieluummin vähän enempi oikialle jos keskisensori aktivoituu.
+	// Onkohan tässä jotain ongelmia noiden ultraääniantureiden muodostamien keilojen kanssa? :hmm
+
+	analogWrite(pwm_a, velocity*(leftSensorValue/max));
+	analogWrite(pwm_b, velocity*(rightSensorValue/max));
+
+
+}
+
+void spinL(int speed) // Spin Left in place
+{ 
+
+digitalWrite(dir_a0, 0);
+digitalWrite(dir_a1, 1);
+digitalWrite(dir_b0, 1);
+digitalWrite(dir_b1, 0);
+
+analogWrite(pwm_a, speed/2); 
+analogWrite(pwm_b, speed/2); 
+
+}
+
+void spinR(int speed) // Spin Right in place
+{ 
+
+digitalWrite(dir_a0, 1);
+digitalWrite(dir_a1, 0);
+digitalWrite(dir_b0, 0);
+digitalWrite(dir_b1, 1);
+
+analogWrite(pwm_a, speed/2); 
+analogWrite(pwm_b, speed/2); 
+
 }

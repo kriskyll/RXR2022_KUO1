@@ -1,19 +1,20 @@
 /*
-Testaus moottoreiden ohjaamiseen sarjaportin yli.
-
 Ei käytä ultraääniantureita mihinkään.
 */
 
 // Moottoreiden ohjaus
 #define pwm_a 3
 #define pwm_b 6
-#define dir_a0 4
-#define dir_a1 5
-#define dir_b0 7
-#define dir_b1 8
+#define dir_a0 5
+#define dir_a1 4
+#define dir_b0 8
+#define dir_b1 7
 
-char inbit; // A place to store serial input
+String s_input; // A place to store serial input
+char action;
+int adjusted_speed;
 
+int default_speed;
 
 void setup()
 {
@@ -28,6 +29,8 @@ void setup()
   pinMode(dir_b1, OUTPUT);
 
   draw(); // Draw the driving instructions to the serial terminal
+
+  default_speed = 200;
   
 }
 
@@ -36,38 +39,55 @@ void loop()
 
 if(Serial.available()){ // Wait for serial input
 
-  inbit = Serial.read();
+  s_input = Serial.readString();
+
+  Serial.println(s_input);
+  
+  action = s_input.substring(0, 1)[0];
+  Serial.println(action);
+
+  String x = s_input.substring(2, s_input.length());
+  int l = x.length();
+  char y[l];
+  x.toCharArray(y, l);
+  
+  adjusted_speed = atoi(y);
+
+  Serial.println(adjusted_speed);
+
+  
+  
  
-  switch(inbit){ // Switch based on serial in
+  switch(action){ // Switch based on serial in
 
     case 'w': // Move Forward
 
-      forward(200);
+      forward(adjusted_speed);
       break;
 
     case 's': // Move Backward
 
-      reverse(200);
+      reverse(adjusted_speed);
       break;
 
     case 'q': // Turn Left while moving forward
 
-      turnL(200);
+      turnL(adjusted_speed);
       break;
         
     case 'e': // Turn Right while moving forward
 
-      turnR(200);
+      turnR(adjusted_speed);
       break;
 
     case 'a': // Spin Left in place
 
-      spinL(200);
+      spinL(adjusted_speed);
       break;
   
     case 'd': // Spin Right in place
 
-      spinR(200);
+      spinR(adjusted_speed);
       break;
 
     case 'x': // Short brake
@@ -113,8 +133,8 @@ digitalWrite(dir_a1, 1);
 digitalWrite(dir_b0, 0);
 digitalWrite(dir_b1, 1);
 
-analogWrite(pwm_a, speed); 
-analogWrite(pwm_b, speed/4); 
+analogWrite(pwm_a, default_speed); 
+analogWrite(pwm_b, speed); 
 
 }
 
@@ -126,8 +146,8 @@ digitalWrite(dir_a1, 1);
 digitalWrite(dir_b0, 0);
 digitalWrite(dir_b1, 1);
 
-analogWrite(pwm_a, speed/4); 
-analogWrite(pwm_b, speed); 
+analogWrite(pwm_a, speed); 
+analogWrite(pwm_b, default_speed); 
 
 }
 

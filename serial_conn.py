@@ -7,4 +7,5 @@ ser.reset_input_buffer()
 
 
 def write(command):
+    print(command)
     ser.write(command)
