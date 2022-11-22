@@ -1,4 +1,4 @@
-playsound
+pygame
 azure-cognitiveservices-speech==1.24.2
 contourpy==1.0.6
 cycler==0.11.0
