@@ -19,7 +19,7 @@ int default_speed;
 void setup()
 {
 
-  Serial.begin(9600); // Pour a bowl of serial
+  Serial.begin(38400); // Pour a bowl of serial
 
   pinMode(pwm_a, OUTPUT);  // Set control pins to be outputs
   pinMode(pwm_b, OUTPUT);
@@ -28,9 +28,7 @@ void setup()
   pinMode(dir_b0, OUTPUT);
   pinMode(dir_b1, OUTPUT);
 
-  draw(); // Draw the driving instructions to the serial terminal
-
-  default_speed = 200;
+  default_speed = 100;
   
 }
 
@@ -194,24 +192,4 @@ digitalWrite(dir_b1, 0);
 analogWrite(pwm_a, 0); 
 analogWrite(pwm_b, 0);
 
-}
-
-void draw() // Serial Instructions
-{
-  Serial.println("          DuckBot 2015          ");
-  Serial.println("                                ");
-  Serial.println("   -------------------------    ");
-  Serial.println("   |       |       |       |    ");
-  Serial.println("   |   Q   |   W   |   E   |    ");
-  Serial.println("   | turnL |forward| turnR |    ");
-  Serial.println("   -------------------------    ");
-  Serial.println("   |       |       |       |    ");
-  Serial.println("   |   A   |   S   |   D   |    ");
-  Serial.println("   | spinL |reverse| spinR |    ");
-  Serial.println("   -------------------------    ");
-  Serial.println("   |       |       |       |    ");
-  Serial.println("   |   Z   |   X   |   C   |    ");
-  Serial.println("   |       | brake |       |    ");
-  Serial.println("   -------------------------    ");
-  Serial.println("                                ");
 }
