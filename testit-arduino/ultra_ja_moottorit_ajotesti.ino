@@ -35,7 +35,7 @@ int distance, max, min, velocity;
 
 void setup() {
 	// Testailuun seriali
-	//Serial.begin(9600);
+	Serial.begin(9600);
 	// Ultrasonicit
 	pinMode(trigV, OUTPUT);
 	pinMode(echoV, INPUT);
@@ -57,7 +57,7 @@ void setup() {
 	// Minimietäisyys mistä asti ultraääni mittaa - turvaetäisyys ettei osu
 	min = 10;
 	// Moottorien maksiminopeus
-	velocity = 100;
+	velocity = 150;
 }
 
 // Main functionality
@@ -86,11 +86,11 @@ int measure(int trig, int echo) { // Etäisyyden mittaaminen
 	duration = pulseIn(echo, HIGH);
 	distance = duration * 0.034 / 2;
 	
-	/* Testausta varten alla olevat
-	if (trig == 5) {
+	// Testausta varten alla olevat
+	if (trig == 2) {
 		Serial.print("Vasen: ");
 	}
-	else if (trig == 6) {
+	else if (trig == 9) {
 		Serial.print("Keski: ");
 	}
 	else {
@@ -98,7 +98,7 @@ int measure(int trig, int echo) { // Etäisyyden mittaaminen
 	}
 	Serial.print(distance);
 	Serial.println(" cm");
-	*/
+	
 
 	if (distance > max) {
 		distance = max-min;

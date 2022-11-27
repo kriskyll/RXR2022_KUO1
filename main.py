@@ -11,7 +11,7 @@ if __name__ == "__main__":
     hog = cv2.HOGDescriptor()
     hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
        
-    cv2.startWindowThread()
+    #cv2.startWindowThread()
          
     # open webcam video stream
     cap = cv2.VideoCapture(0)   
@@ -21,7 +21,7 @@ if __name__ == "__main__":
     frame_h = 200
 
     # motor speed
-    speed = 200
+    speed = 200/2
     no_box_count = 0
     ready = True
     next_command = bytearray()
@@ -52,11 +52,11 @@ if __name__ == "__main__":
 
         for (xA, yA, xB, yB) in boxes:
             # display the detected boxes in the colour picture
-            cv2.rectangle(frame, (xA, yA), (xB, yB), (0, 255, 0), 2)
+            cv2.rectangle(gray, (xA, yA), (xB, yB), (0, 255, 0), 2)
     
         # Write the output video 
-        # Display the resulting frame
-        cv2.imshow('frame',frame)
+        # Display the resulting 
+        #cv2.imshow('frame', gray)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
@@ -76,6 +76,7 @@ if __name__ == "__main__":
             x2 = box[2]
             direction = (x1+x2)/2
 
+
             #print("direction: ", direction)
 
             # coefficient for dynamic motor control
@@ -83,11 +84,12 @@ if __name__ == "__main__":
             if deviation < 0:
                 deviation *= -1
 
-            adjusted_speed = int(speed - deviation)
+            adjusted_speed = int(speed - deviation/4)
             #print("adjusted speed is:", adjusted_speed)
             #print("speed is : ", speed)
             # MOVEMENT CONTROL
-            
+            print(adjusted_speed)
+
             if 175 < direction < 225:
                 next_command = bytearray(f"w {speed}".encode())
 
