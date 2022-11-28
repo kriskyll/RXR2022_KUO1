@@ -24,7 +24,7 @@ if __name__ == "__main__":
     speed = 200/2
     no_box_count = 0
     ready = True
-    next_command = bytearray()
+    next_command = bytearray(2)
     
     while(True):
 
@@ -64,7 +64,8 @@ if __name__ == "__main__":
         if len(boxes) == 0:
             no_box_count += 1
             if no_box_count > 5:
-                next_command = bytearray("x 0".encode())
+                next_command[0] = ord("x")
+                next_command[1] = int(0)
                 no_box_count = 0
 
         if len(boxes) > 0:
@@ -91,14 +92,16 @@ if __name__ == "__main__":
             print(adjusted_speed)
 
             if 175 < direction < 225:
-                next_command = bytearray(f"w {speed}".encode())
+                next_command[0] = ord("w")
+                next_command[1] = int(speed)
 
             elif direction > 205:
-            
-                next_command = bytearray(f"e {adjusted_speed}".encode())
+                next_command[0] = ord("e")
+                next_command[1] = int(adjusted_speed)
 
             elif direction < 195:
-                next_command = bytearray(f"q {adjusted_speed}".encode())
+                next_command[0] = ord("q")
+                next_command[1] = int(adjusted_speed)
 
         if ready:
             ready = False

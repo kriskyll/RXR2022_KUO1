@@ -11,12 +11,11 @@ void setup() {
 }
 
 void loop() {
-    if(Serial.available() == 2) {
+    if(Serial.available() > 1) {
         action = Serial.read();
         speed = Serial.read();
         if (action == 'd') {
             digitalWrite(LED_BUILTIN, HIGH);
-            delay(500);
         }
         if (speed == 89) {
             digitalWrite(LED_BUILTIN, LOW);

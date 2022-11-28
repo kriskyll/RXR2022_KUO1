@@ -12,7 +12,7 @@ Ei käytä ultraääniantureita mihinkään.
 
 String s_input; // A place to store serial input
 char action;
-int adjusted_speed;
+char speed;
 
 int default_speed;
 
@@ -36,56 +36,50 @@ void setup()
 
 void loop()
 { 
-if(Serial.available()){ // Wait for serial input
+if(Serial.available() > 1){ // Wait for serial input
 
-  s_input = Serial.readString();
-  action = s_input.substring(0, 1)[0];
-  
-  String x = s_input.substring(2, s_input.length()+1);
-  int l = x.length();
-  char y[l];
-  x.toCharArray(y, l+1);
-  
-  adjusted_speed = atoi(y);
-  
-  Serial.println(adjusted_speed);
+    action = Serial.read();
+    speed = Serial.read();
+
+    byte forSend[2] = {action, speed};
+    Serial.write(forSend, 2);
  
-  switch(action){ // Switch based on serial in
+    switch(action){ // Switch based on serial in
 
-    case 'w': // Move Forward
+        case 'w': // Move Forward
 
-      forward(adjusted_speed);
-      break;
+            forward(adjusted_speed);
+            break;
 
-    case 's': // Move Backward
+       case 's': // Move Backward
 
-      reverse(adjusted_speed);
-      break;
+            reverse(adjusted_speed);
+            break;
 
-    case 'q': // Turn Left while moving forward
+        case 'q': // Turn Left while moving forward
 
-      turnL(adjusted_speed);
-      break;
+            turnL(adjusted_speed);
+            break;
         
-    case 'e': // Turn Right while moving forward
+        case 'e': // Turn Right while moving forward
 
-      turnR(adjusted_speed);
-      break;
+            turnR(adjusted_speed);
+            break;
 
-    case 'a': // Spin Left in place
+        case 'a': // Spin Left in place
 
-      spinL(adjusted_speed);
-      break;
-  
-    case 'd': // Spin Right in place
+            spinL(adjusted_speed);
+            break;
 
-      spinR(adjusted_speed);
-      break;
+        case 'd': // Spin Right in place
 
-    case 'x': // Short brake
+            spinR(adjusted_speed);
+            break;
 
-      brake();
-      break;
+        case 'x': // Short brake
+
+            brake();
+            break;
 
     }
   }  
