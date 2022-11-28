@@ -9,3 +9,9 @@ ser.reset_input_buffer()
 def write(command):
     #print(command)
     ser.write(command)
+
+def read(size):
+    return ser.read(size)
+
+def in_waiting():
+    return ser.inWaiting()

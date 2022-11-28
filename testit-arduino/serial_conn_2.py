@@ -2,6 +2,7 @@
 
 import serial
 
+# Muuta tuohon se portti joka näkyy Arduino IDE:ssä, mihin kortti yhdistetty
 ser = serial.Serial('COM7', 9600, timeout=1)
 ser.reset_input_buffer()
 ser.reset_output_buffer()

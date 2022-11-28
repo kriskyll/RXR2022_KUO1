@@ -30,8 +30,8 @@ if __name__ == "__main__":
 
         if ser.ser.in_waiting > 0:
             ready = True
-            line = ser.ser.readline().decode('utf-8').rstrip()
-            print(line)
+            answer = ser.read(2)
+            print(chr(answer[0], answer[1]))
                 
         # counts frames with no box detected, softens the stopping threshold
         
