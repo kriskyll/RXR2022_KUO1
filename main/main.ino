@@ -12,7 +12,7 @@ Ei käytä ultraääniantureita mihinkään.
 
 String s_input; // A place to store serial input
 char action;
-char speed;
+char adjusted_speed;
 
 int default_speed;
 
@@ -39,9 +39,9 @@ void loop()
 if(Serial.available() > 1){ // Wait for serial input
 
     action = Serial.read();
-    speed = Serial.read();
+    adjusted_speed = Serial.read();
 
-    byte forSend[2] = {action, speed};
+    byte forSend[2] = {action, adjusted_speed};
     Serial.write(forSend, 2);
  
     switch(action){ // Switch based on serial in
