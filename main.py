@@ -7,6 +7,13 @@ from time import sleep
 
 if __name__ == "__main__":
 
+    test = bytearray(2)
+
+    test[0] = ord("x")
+    test[1] = int(0)
+
+    ser.write(test)
+
     # initialize the HOG descriptor/person detector
     hog = cv2.HOGDescriptor()
     hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
