@@ -1,5 +1,9 @@
 # Main application loop and gpio connections
 
+'''
+TODO: KESKEN! EI TOIMI!
+'''
+
 import serial_conn as ser
 import numpy as np
 import cv2
