@@ -38,7 +38,7 @@ if(Serial.available() > 1){ // Wait for serial input
     action = Serial.read();
     adjusted_speed = Serial.read();
 
-    byte forSend[2] = {action, adjusted_speed};
+    char forSend[2] = {action, adjusted_speed};
     Serial.write(forSend, 2);
  
     switch(action){ // Switch based on serial in
