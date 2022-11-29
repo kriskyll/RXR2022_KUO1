@@ -4,9 +4,14 @@ import serial_conn as ser
 import numpy as np
 import cv2
 from time import sleep
+import led
 
 if __name__ == "__main__":
 
+    led.spin()
+    led.spin()    
+    led.set_mode_listen()
+    
     test = bytearray(2)
 
     test[0] = ord("x")
