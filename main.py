@@ -1,10 +1,14 @@
 # Main application loop and gpio connections
 
-import serial_conn as ser
 import numpy as np
 import cv2
 from time import sleep
+from threading import Thread
+
+import serial_conn as ser
 import led
+from speech import start_sr
+
 
 if __name__ == "__main__":
 
