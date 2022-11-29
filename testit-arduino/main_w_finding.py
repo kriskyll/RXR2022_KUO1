@@ -25,13 +25,14 @@ if __name__ == "__main__":
     no_box_count = 0
     ready = True
     next_command = bytearray(2)
+    last_command = bytearray(2)     # To get last known direction
     
     while(True):
 
         if ser.ser.in_waiting > 0:
             ready = True
             answer = ser.read(2)
-            print(answer[0])
+            print(chr(answer[0]), answer[1])
                 
         # counts frames with no box detected, softens the stopping threshold
         
@@ -63,9 +64,19 @@ if __name__ == "__main__":
         # Stopping robot if no human detected
         if len(boxes) == 0:
             no_box_count += 1
+            # If human lost
             if no_box_count > 5:
-                next_command[0] = ord("x")
-                next_command[1] = int(0)
+                # Turn to direction last seen
+                if last_command[0] == "w":
+                    next_command[0] = last_command[0] = ord("x")
+                    next_command[1] = last_command[1] = int(0)
+                elif last_command[0] == "e":
+                    next_command[0] = last_command[0] = ord("x")
+                    next_command[1] = last_command[1] = int(0)
+                elif last_command[0] == "q":
+                    next_command[0] = last_command[0] = ord("x")
+                    next_command[1] = last_command[1] = int(0)
+
                 no_box_count = 0
 
         if len(boxes) > 0:
@@ -91,17 +102,17 @@ if __name__ == "__main__":
             # MOVEMENT CONTROL
             print(adjusted_speed)
 
-            if 175 < direction < 225:
-                next_command[0] = ord("w")
-                next_command[1] = int(speed)
+            if 195 <= direction <= 205:
+                next_command[0] = last_command[0] = ord("w")
+                next_command[1] = last_command[1] = int(speed)
 
             elif direction > 205:
-                next_command[0] = ord("e")
-                next_command[1] = int(adjusted_speed)
+                next_command[0] = last_command[0] = ord("e")
+                next_command[1] = last_command[1] = int(adjusted_speed)
 
             elif direction < 195:
-                next_command[0] = ord("q")
-                next_command[1] = int(adjusted_speed)
+                next_command[0] = last_command[0] = ord("q")
+                next_command[1] = last_command[1] = int(adjusted_speed)
 
         if ready:
             ready = False

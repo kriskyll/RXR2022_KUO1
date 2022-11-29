@@ -10,7 +10,6 @@ Ei käytä ultraääniantureita mihinkään.
 #define dir_b0 8
 #define dir_b1 7
 
-String s_input; // A place to store serial input
 char action;
 char adjusted_speed;
 

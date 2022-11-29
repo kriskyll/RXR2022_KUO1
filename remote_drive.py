@@ -7,22 +7,6 @@ from time import sleep
 
 if __name__ == "__main__":
 
-    # initialize the HOG descriptor/person detector
-    hog = cv2.HOGDescriptor()
-    hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
-       
-    #cv2.startWindowThread()
-         
-    # open webcam video stream
-    cap = cv2.VideoCapture(0)   
-
-    # frame size
-    frame_w = 400
-    frame_h = 200
-
-    # motor speed
-    speed = 200/2
-    no_box_count = 0
     ready = True
     next_command = bytearray(2)
     
@@ -31,7 +15,7 @@ if __name__ == "__main__":
         if ser.ser.in_waiting > 0:
             ready = True
             answer = ser.read(2)
-            print(answer[0])
+            print(chr(answer[0]), answer[1])
                 
         # counts frames with no box detected, softens the stopping threshold
         
