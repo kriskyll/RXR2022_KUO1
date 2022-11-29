@@ -18,7 +18,7 @@ int default_speed;
 void setup()
 {
 
-  Serial.begin(9600); // Pour a bowl of serial
+  Serial.begin(115200); // Pour a bowl of serial
 
   pinMode(pwm_a, OUTPUT);  // Set control pins to be outputs
   pinMode(pwm_b, OUTPUT);
@@ -27,7 +27,7 @@ void setup()
   pinMode(dir_b0, OUTPUT);
   pinMode(dir_b1, OUTPUT);
 
-  default_speed = 200;
+  default_speed = 100;
   
 }
 
