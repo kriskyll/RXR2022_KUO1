@@ -1,11 +1,27 @@
 # Main application loop and gpio connections
 
-import serial_conn as ser
 import numpy as np
 import cv2
 from time import sleep
+from threading import Thread
+
+import serial_conn as ser
+import led
+from speech import start_sr
 
 if __name__ == "__main__":
+
+    led.spin()
+    led.spin()    
+    led.set_mode_listen()
+    
+    test = bytearray(2)
+
+    test[0] = ord("x")
+    test[1] = int(0)
+
+    ser.write(test)
+
 
     # initialize the HOG descriptor/person detector
     hog = cv2.HOGDescriptor()
@@ -32,8 +48,9 @@ if __name__ == "__main__":
         if ser.ser.in_waiting > 0:
             ready = True
             answer = ser.read(2)
+            print("Arduino: ", end="\t")
             print(chr(answer[0]), answer[1])
-                
+
         # counts frames with no box detected, softens the stopping threshold
         
         # Capture frame-by-frame
@@ -69,13 +86,13 @@ if __name__ == "__main__":
                 # Turn to direction last seen
                 if last_command[0] == "w":
                     next_command[0] = ord("x")
-                    next_command[1] = int(100)
+                    next_command[1] = int(speed)
                 elif last_command[0] == "e":
                     next_command[0] = ord("a")
-                    next_command[1] = int(100)
+                    next_command[1] = int(speed)
                 elif last_command[0] == "q":
                     next_command[0] = ord("d")
-                    next_command[1] = int(100)
+                    next_command[1] = int(speed)
 
                 no_box_count = 0
 
