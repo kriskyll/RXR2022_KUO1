@@ -81,20 +81,25 @@ if __name__ == "__main__":
         # Stopping robot if no human detected
         if len(boxes) == 0:
             no_box_count += 1
+
             # If human lost
-            if no_box_count > 15:
+            if no_box_count >= 15:
                 # Turn to direction last seen
-                if last_command[0] == "w":
+                print(last_command[0])
+                if last_command[0] == ord("w"):
                     next_command[0] = ord("x")
                     next_command[1] = int(speed)
-                elif last_command[0] == "e":
+                elif last_command[0] == ord("e"):
                     next_command[0] = ord("a")
                     next_command[1] = int(speed)
-                elif last_command[0] == "q":
+                elif last_command[0] == ord("q"):
                     next_command[0] = ord("d")
                     next_command[1] = int(speed)
 
-                no_box_count = 0
+                if no_box_count == 60:
+                    next_command[0] = ord("x")
+                    next_command[1] = int(0)
+                    no_box_count = 0
 
         if len(boxes) > 0:
             no_box_count = 0
@@ -120,16 +125,18 @@ if __name__ == "__main__":
             print(adjusted_speed)
 
             if 195 <= direction <= 205:
-                next_command[0] = last_command[0] = ord("w")
-                next_command[1] = last_command[1] = int(speed)
+                next_command[0] = ord("w")
+                next_command[1] = int(speed)
 
             elif direction > 205:
-                next_command[0] = last_command[0] = ord("e")
-                next_command[1] = last_command[1] = int(adjusted_speed)
+                next_command[0] = ord("e")
+                next_command[1] = int(adjusted_speed)
 
             elif direction < 195:
-                next_command[0] = last_command[0] = ord("q")
-                next_command[1] = last_command[1] = int(adjusted_speed)
+                next_command[0] = ord("q")
+                next_command[1] = int(adjusted_speed)
+            last_command = next_command
+
 
         if ready:
             ready = False
