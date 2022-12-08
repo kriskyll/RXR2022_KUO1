@@ -220,10 +220,10 @@ void drive(int leftSensorValue, int centralSensorValue, int rightSensorValue) { 
     // Tähän pitäisi lisätä ominaisuus, jossa kaaressa ajaa takaisin kohti aiempaa kulkusuuntaansa
     // ... sitä varten tosin pitää mittailla fyysisesti että kuinka paljon se kääntyy
     if (centralSensorValue == 0) {
-		reverse(velocity);
+		reverse(default_speed);
 		delay(1000);
 		shutoff();
-		spinR(velocity);
+		spinR(default_speed);
 		delay(1000);
 		shutoff();
 	}
@@ -233,8 +233,8 @@ void drive(int leftSensorValue, int centralSensorValue, int rightSensorValue) { 
 	digitalWrite(dir_b0, 0);
 	digitalWrite(dir_b1, 1);
 
-	analogWrite(pwm_a, velocity*(leftSensorValue/(max-min)));
-	analogWrite(pwm_b, velocity*(rightSensorValue/(max-min)));
+	analogWrite(pwm_a, default_speed*(leftSensorValue/(max-min)));
+	analogWrite(pwm_b, default_speed*(rightSensorValue/(max-min)));
 
 
 }

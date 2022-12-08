@@ -143,8 +143,8 @@ digitalWrite(dir_a1, 1);
 digitalWrite(dir_b0, 1);
 digitalWrite(dir_b1, 0);
 
-analogWrite(pwm_a, speed/2); 
-analogWrite(pwm_b, speed/2); 
+analogWrite(pwm_a, speed); 
+analogWrite(pwm_b, speed); 
 
 }
 
@@ -156,8 +156,8 @@ digitalWrite(dir_a1, 0);
 digitalWrite(dir_b0, 0);
 digitalWrite(dir_b1, 1);
 
-analogWrite(pwm_a, speed/2); 
-analogWrite(pwm_b, speed/2); 
+analogWrite(pwm_a, speed); 
+analogWrite(pwm_b, speed); 
 
 }
 

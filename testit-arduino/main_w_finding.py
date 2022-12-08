@@ -85,8 +85,8 @@ if __name__ == "__main__":
             if no_box_count >= 15:
                 # Turn to direction last seen
                 print(last_command[0])
-                if last_command[0] == ord("x"):
-                    next_command[0] = ord("w")
+                if last_command[0] == ord("w"):
+                    next_command[0] = ord("x")
                     next_command[1] = int(speed)
                 elif last_command[0] == ord("e"):
                     next_command[0] = ord("a")
@@ -125,18 +125,21 @@ if __name__ == "__main__":
 
             if 195 <= direction <= 205:
                 next_command[0] = ord("w")
+                last_command[0] = ord("w")
                 next_command[1] = int(speed)
-                last_command = next_command
+                last_command[1] = int(speed)
 
             elif direction > 205:
                 next_command[0] = ord("e")
+                last_command[0] = ord("e")
                 next_command[1] = int(adjusted_speed)
-                last_command = next_command
+                last_command[1] = int(adjusted_speed)
 
             elif direction < 195:
                 next_command[0] = ord("q")
+                last_command[0] = ord("q")
                 next_command[1] = int(adjusted_speed)
-                last_command = next_command
+                last_command[1] = int(adjusted_speed)
 
         if ready:
             ready = False
