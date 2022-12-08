@@ -77,7 +77,6 @@ if __name__ == "__main__":
         #cv2.imshow('frame', gray)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-
         # Stopping robot if no human detected
         if len(boxes) == 0:
             no_box_count += 1
@@ -86,8 +85,8 @@ if __name__ == "__main__":
             if no_box_count >= 15:
                 # Turn to direction last seen
                 print(last_command[0])
-                if last_command[0] == ord("w"):
-                    next_command[0] = ord("x")
+                if last_command[0] == ord("x"):
+                    next_command[0] = ord("w")
                     next_command[1] = int(speed)
                 elif last_command[0] == ord("e"):
                     next_command[0] = ord("a")
@@ -127,16 +126,17 @@ if __name__ == "__main__":
             if 195 <= direction <= 205:
                 next_command[0] = ord("w")
                 next_command[1] = int(speed)
+                last_command = next_command
 
             elif direction > 205:
                 next_command[0] = ord("e")
                 next_command[1] = int(adjusted_speed)
+                last_command = next_command
 
             elif direction < 195:
                 next_command[0] = ord("q")
                 next_command[1] = int(adjusted_speed)
-            last_command = next_command
-
+                last_command = next_command
 
         if ready:
             ready = False
