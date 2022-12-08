@@ -65,17 +65,17 @@ if __name__ == "__main__":
         if len(boxes) == 0:
             no_box_count += 1
             # If human lost
-            if no_box_count > 5:
+            if no_box_count > 15:
                 # Turn to direction last seen
                 if last_command[0] == "w":
                     next_command[0] = ord("x")
-                    next_command[1] = int(0)
+                    next_command[1] = int(100)
                 elif last_command[0] == "e":
-                    next_command[0] = ord("x")
-                    next_command[1] = int(0)
+                    next_command[0] = ord("a")
+                    next_command[1] = int(100)
                 elif last_command[0] == "q":
-                    next_command[0] = ord("x")
-                    next_command[1] = int(0)
+                    next_command[0] = ord("d")
+                    next_command[1] = int(100)
 
                 no_box_count = 0
 

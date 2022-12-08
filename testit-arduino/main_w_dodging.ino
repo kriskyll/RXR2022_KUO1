@@ -44,7 +44,7 @@ void setup()
     pinMode(dir_b0, OUTPUT);
     pinMode(dir_b1, OUTPUT);
 
-    default_speed = 200;        // Perusnopeus
+    default_speed = 100;        // Perusnopeus
 
     max = 30;                   // Ultran raja-arvot
     min = 10;
@@ -56,10 +56,9 @@ void loop()
     // Väistetään kohteita jos ollaan liian lähellä estettä
     if (measureV() < max or measureK() < max or measureO() < max) {
         drive(measureV(), measureK(), measureO());
-        continue;
     }
 
-    if(Serial.available() > 1){ // Wait for serial input
+    else if (Serial.available() > 1){ // Wait for serial input
 
         action = Serial.read();
         adjusted_speed = Serial.read();
