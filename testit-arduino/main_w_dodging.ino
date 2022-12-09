@@ -23,7 +23,7 @@ char adjusted_speed;
 int default_speed;
 
 long duration;      // Ultran muuttujat
-int distance, max, min, velocity;
+int distance, max, min, distV, distK, distO;
 
 void setup()
 {
@@ -46,16 +46,19 @@ void setup()
 
     default_speed = 100;        // Perusnopeus
 
-    max = 30;                   // Ultran raja-arvot
-    min = 10;
+    max = 40;                   // Ultran raja-arvot
+    min = 15;
   
 }
 
 void loop()
 { 
+    distV = measureV();
+    distK = measureK();
+    distO = measureO();
     // Väistetään kohteita jos ollaan liian lähellä estettä
-    if (measureV() < max or measureK() < max or measureO() < max) {
-        drive(measureV(), measureK(), measureO());
+    if (distV < max or distK < max or distO < max) {
+        drive(distV, distK, distO);
     }
 
     else if (Serial.available() > 1){ // Wait for serial input
@@ -168,8 +171,8 @@ void spinL(int speed) // Spin Left in place
     digitalWrite(dir_b0, 1);
     digitalWrite(dir_b1, 0);
 
-    analogWrite(pwm_a, speed/2); 
-    analogWrite(pwm_b, speed/2); 
+    analogWrite(pwm_a, speed); 
+    analogWrite(pwm_b, speed); 
 
 }
 
@@ -181,8 +184,8 @@ void spinR(int speed) // Spin Right in place
     digitalWrite(dir_b0, 0);
     digitalWrite(dir_b1, 1);
 
-    analogWrite(pwm_a, speed/2); 
-    analogWrite(pwm_b, speed/2); 
+    analogWrite(pwm_a, speed); 
+    analogWrite(pwm_b, speed); 
 
 }
 
@@ -233,9 +236,15 @@ void drive(int leftSensorValue, int centralSensorValue, int rightSensorValue) { 
 	digitalWrite(dir_b0, 0);
 	digitalWrite(dir_b1, 1);
 
-	analogWrite(pwm_a, default_speed*(leftSensorValue/(max-min)));
-	analogWrite(pwm_b, default_speed*(rightSensorValue/(max-min)));
+    // Muuttujat moottoreiden hidastamiseen
+    int a = float(default_speed)*(float(leftSensorValue)/float(max));
+    int b = float(default_speed)*(float(rightSensorValue)/float(max));
 
+	analogWrite(pwm_a, a);
+	analogWrite(pwm_b, b);
+
+    // Katso onko tämä hyvä tässä
+    shutoff();
 
 }
 
@@ -262,23 +271,9 @@ int measure(int trig, int echo) { // Etäisyyden mittaaminen
 	digitalWrite(trig, LOW);
 	duration = pulseIn(echo, HIGH);
 	distance = duration * 0.034 / 2;
-	
-	// Testausta varten alla olevat
-	if (trig == 2) {
-		Serial.print("Vasen: ");
-	}
-	else if (trig == 9) {
-		Serial.print("Keski: ");
-	}
-	else {
-		Serial.print("Oikea: ");
-	}
-	Serial.print(distance);
-	Serial.println(" cm");
-	
 
 	if (distance > max) {
-		distance = max-min;
+		distance = max;
 	}
 	if (distance < min) {
 		distance = 0;

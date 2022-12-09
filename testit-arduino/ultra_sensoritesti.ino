@@ -20,7 +20,7 @@
 #define echoO 13
 
 long duration;
-int distance;
+int distance, max, min;
 
 void setup() {
 	Serial.begin(9600);
@@ -30,12 +30,17 @@ void setup() {
 	pinMode(echoK, INPUT);
 	pinMode(trigO, OUTPUT);
 	pinMode(echoO, INPUT);
+
+	max = 30;
+	min = 10;
 }
 
 void loop() {
-	measure(5, 11);
-	measure(6, 12);
-	measure(7, 13);
+	delay(500);
+	measure(2, 11);
+	measure(9, 12);
+	measure(10, 13);
+	Serial.println();
 }
 
 void measure(int trig, int echo) {
@@ -47,15 +52,23 @@ void measure(int trig, int echo) {
 	duration = pulseIn(echo, HIGH);
 	distance = duration * 0.034 / 2;
 	
-	if (trig == 5) {
+	if (distance > max) {
+		distance = max;
+	}
+	else if (distance < min) {
+		distance = 0;
+	}
+	
+	// Printit testaukseen
+	if (trig == 2) {
 		Serial.print("Vasen: ");
 	}
-	else if (trig == 6) {
+	else if (trig == 9) {
 		Serial.print("Keski: ");
 	}
-	else {
+	else if (trig == 10) {
 		Serial.print("Oikea: ");
 	}
 	Serial.print(distance);
-	Serial.println(" cm");
+	Serial.println(" cm \t");
 }
