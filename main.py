@@ -7,14 +7,15 @@ from threading import Thread
 
 import serial_conn as ser
 import led
-from speech import start_sr
+from speech import listen
 
+mode = 0
 
 if __name__ == "__main__":
-
-    led.spin()
+    t = Thread(target=listen)
+    t.start()
+    
     led.spin()    
-    led.set_mode_listen()
     
     test = bytearray(2)
 
@@ -22,6 +23,7 @@ if __name__ == "__main__":
     test[1] = int(0)
 
     ser.write(test)
+
 
     # initialize the HOG descriptor/person detector
     hog = cv2.HOGDescriptor()
@@ -41,15 +43,21 @@ if __name__ == "__main__":
     no_box_count = 0
     ready = True
     next_command = bytearray(2)
+    last_command = bytearray(2)     # To get last known direction
     
     while(True):
+        print(mode)
+        if (mode == 0):
+            led.set_mode_stop()
+        elif (mode == 1):
+            led.set_mode_follow()
 
         if ser.ser.in_waiting > 0:
             ready = True
             answer = ser.read(2)
-            print("Arduino: ", end="\t")
-            print(chr(answer[0]), answer[1])
-                
+            #print("Arduino: ", end="\t")
+            #print(chr(answer[0]), answer[1])
+
         # counts frames with no box detected, softens the stopping threshold
         
         # Capture frame-by-frame
@@ -76,14 +84,24 @@ if __name__ == "__main__":
         #cv2.imshow('frame', gray)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-
         # Stopping robot if no human detected
         if len(boxes) == 0:
             no_box_count += 1
-            if no_box_count > 5:
-                next_command[0] = ord("x")
-                next_command[1] = int(0)
-                no_box_count = 0
+
+            # If human lost
+            if no_box_count >= 10:
+                # Turn to direction last seen
+                if last_command[0] == ord("e"):
+                    next_command[0] = ord("a")
+                    next_command[1] = int(speed)
+                elif last_command[0] == ord("q"):
+                    next_command[0] = ord("d")
+                    next_command[1] = int(speed)
+
+                if no_box_count == 20:
+                    next_command[0] = ord("x")
+                    next_command[1] = int(0)
+                    no_box_count = 0
 
         if len(boxes) > 0:
             no_box_count = 0
@@ -106,19 +124,25 @@ if __name__ == "__main__":
             #print("adjusted speed is:", adjusted_speed)
             #print("speed is : ", speed)
             # MOVEMENT CONTROL
-            print(adjusted_speed)
+            #print(adjusted_speed)
 
-            if 175 < direction < 225:
+            if 195 <= direction <= 205:
                 next_command[0] = ord("w")
+                last_command[0] = ord("w")
                 next_command[1] = int(speed)
+                last_command[1] = int(speed)
 
             elif direction > 205:
                 next_command[0] = ord("e")
+                last_command[0] = ord("e")
                 next_command[1] = int(adjusted_speed)
+                last_command[1] = int(adjusted_speed)
 
             elif direction < 195:
                 next_command[0] = ord("q")
+                last_command[0] = ord("q")
                 next_command[1] = int(adjusted_speed)
+                last_command[1] = int(adjusted_speed)
 
         if ready:
             ready = False
