@@ -12,7 +12,10 @@ from speech import listen
 mode = 0
 
 if __name__ == "__main__":
-    t = Thread(target=listen)
+
+    q = queue.Queue()
+    t = Thread(target=listen, args=(q,))
+    print("starting thread")
     t.start()
     
     led.spin()    
