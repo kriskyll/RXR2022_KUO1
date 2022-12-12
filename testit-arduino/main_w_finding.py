@@ -7,7 +7,7 @@ from threading import Thread
 
 import serial_conn as ser
 import led
-from speech import start_sr
+from speech import stop_listening
 
 if __name__ == "__main__":
 
