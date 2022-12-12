@@ -23,7 +23,7 @@ char adjusted_speed;
 int default_speed;
 
 long duration;      // Ultran muuttujat
-int distance, max, min, distV, distK, distO;
+int distance, max, min; //, distV, distK, distO; <-- testataan josko ei määriteltäis täällä
 
 void setup()
 {
@@ -53,9 +53,9 @@ void setup()
 
 void loop()
 { 
-    distV = measureV();
-    distK = measureK();
-    distO = measureO();
+    int distV = measureV();
+    int distK = measureK();
+    int distO = measureO();
     // Väistetään kohteita jos ollaan liian lähellä estettä
     if (distV < max or distK < max or distO < max) {
         drive(distV, distK, distO);
