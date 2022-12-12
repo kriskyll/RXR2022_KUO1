@@ -24,6 +24,7 @@ int default_speed;
 
 long duration;      // Ultran muuttujat
 int distance, max, min; //, distV, distK, distO; <-- testataan josko ei määriteltäis täällä
+bool control;       // Hallitsemaan onko juuri lopetettu väistely
 
 void setup()
 {
@@ -48,6 +49,8 @@ void setup()
 
     max = 40;                   // Ultran raja-arvot
     min = 15;
+
+    control = false;
   
 }
 
@@ -56,9 +59,19 @@ void loop()
     int distV = measureV();
     int distK = measureK();
     int distO = measureO();
+
     // Väistetään kohteita jos ollaan liian lähellä estettä
     if (distV < max or distK < max or distO < max) {
+        if (!control) {
+          control = !control;
+        }
         drive(distV, distK, distO);
+    }
+
+    // Jos on juuri väistely eikä enää olla liian lähellä, moottorit kiinni
+    else if (control) {
+        control = !control;
+        shutoff();
     }
 
     else if (Serial.available() > 1){ // Wait for serial input
@@ -242,9 +255,6 @@ void drive(int leftSensorValue, int centralSensorValue, int rightSensorValue) { 
 
 	analogWrite(pwm_a, a);
 	analogWrite(pwm_b, b);
-
-    // Katso onko tämä hyvä tässä
-    shutoff();
 
 }
 
